@@ -1,0 +1,29 @@
+{
+  "name": "lodown-emmapejko",
+  "version": "1.0.0",
+  "description": "An npm functional programming library project",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "istanbul cover _mocha -- test/ -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emmapejko/lodown.git"
+  },
+  "author": "Emma Pejko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emmapejko/lodown/issues"
+  },
+  "homepage": "https://github.com/emmapejko/lodown#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "i": "^0.3.6",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.4.0",
+    "sinon": "^10.0.0"
+  }
+}
