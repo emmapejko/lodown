@@ -169,3 +169,274 @@ function each(collection, action) {
 }
 module.exports.each = each;
 
+/**
+ * unique: Designed to remove all duplicates from an Array using the indexOf() function in the implementation.
+ * 
+ * @param {Array} array: The input Array.
+ * @return {Array} result: A new Array of the elements from the input array with all duplicates removed.
+ */
+ 
+ function unique(array){
+     let occurances = [];
+    for (let i = 0; i < array.length; i++){
+        occurances.push(indexOf(array, array[i]));
+    }
+    
+    let uniqueOccurances = [...new Set(occurances)]
+    
+    let result = [];
+    for (let j = 0; j < uniqueOccurances.length; j++){
+        result.push(array[uniqueOccurances[j]]);
+    }
+    
+    return result;
+ }
+ 
+ module.exports.unique = unique; 
+
+/**
+ * filter: Designed to take in an array and a function, loop over the array and call the function for each element. 
+ * Then, return a new array of elements from which the function call returned true.
+ * 
+ * @param {Array} array: The input Array.
+ * @param {Function} action: The Function to call for each array element.
+ * @return {Array} result: A new Array of the elements from the input array that when passed into <action> returned true.
+ */
+ 
+ function filter(array, action){
+    let result = [];
+    for (let i = 0; i < array.length; i++){
+        if (action(array[i], i, array)){
+            result.push(array[i]);
+        }
+    }
+    return result;
+ }
+ 
+ module.exports.filter = filter;
+ 
+ /**
+ * reject: Designed to take in an array and a function, loop over the array and call the function for each element. 
+ * Then, return a new array of elements from which the function call returned false.
+ * 
+ * @param {Array} array: The input Array.
+ * @param {Function} action: The Function to call for each array element.
+ * @return {Array} result: A new Array of the elements from the input array that when passed into <action> returned false.
+ */
+ 
+function reject(array, action){
+    let result = [];
+    for (let i = 0; i < array.length; i++){
+        if (!action(array[i], i, array)){
+            result.push(array[i]);
+        }
+    }
+    return result;
+}
+
+module.exports.reject = reject;
+
+ /**
+ * partition: Designed to take in an array and a function, loop over the array and call the function for each element. 
+ * Then, return a new array made up of 2 sub arrays: 
+ * 1) An array of elements for which the function call returned true.
+ * 2) An array of elements for which the function call returned false.
+ * 
+ * @param {Array} array: The input Array.
+ * @param {Function} action: The Function to call for each array element.
+ * @return {Array} result: A new Array made of 2 sub arrays: the first containing the elements that returned true when passed into <action>, the second containing the elements that returned false.
+ */
+ 
+function partition(array, action){
+    let result = [[], []];
+    for (let i = 0; i < array.length; i++){
+        if (action(array[i], i, array)){
+            result[0].push(array[i]);
+        } else {
+            result[1].push(array[i]);
+        }
+    }
+    return result;
+}
+
+module.exports.partition = partition; 
+
+/**
+ * map: Designed to take in a collecion and a function, loop over the collection and call the function for each element/value. 
+ * Then, return a new array consisting of the return values from each function call.
+ * 
+ * @param {Array of Object} collection: The input collection.
+ * @param {Function} action: The Function to call for each element/value.
+ * @return {Array} result: A new Array containing the return values from calling the function for each element/value.
+ */
+ 
+function map(collection, action){
+    let result = [];
+    if (Array.isArray(collection)){
+        for (let i = 0; i < collection.length; i++){
+            result.push(action(collection[i], i, collection));
+        }
+    } else {
+        for (let key in collection){
+            result.push(action(collection[key], key, collection));
+        }
+    }
+    return result;
+}
+
+module.exports.map = map;
+
+/**
+ * pluck: Designed to take in an array of objects and a property, returning an array of the value of the property for every object in the input array, using the map() function.
+ * 
+ * @param {Array} array: The input array of objects.
+ * @param {String} property: The property to find the value of in each object in the input array.
+ * @return {Array}: A new Array containing the value of <property> from each object in the input array.
+ */
+ 
+ function pluck(array, property){
+    return map(array, function(element){ return element[property]});
+ }
+ 
+ module.exports.pluck = pluck;
+ 
+/**
+ * every: Designed to take in a collection and a function and call the function for every element of the collection. 
+ * If the function call returns true for every element, return true, if even one of them returns false, return false.
+ * If no function is provided, return true if every element is truthy, return false otherwise.
+ * 
+ * @param {Array of Object} collection: The input collection.
+ * @param {Function} action: The function to call on every element of the input collection.
+ * @return {Boolean}: True if the function call returns true for every element (or if every element is truthy when no function is provided), false otherwise. 
+ */
+ 
+ function every(collection, action){
+    if (action === undefined){
+        if (Array.isArray(collection)){
+            for (let i = 0; i < collection.length; i++){
+                if (!collection[i]){
+                    return false;
+                }
+            }
+        } else {
+            for (let key in collection){
+                if (!collection[key]){
+                    return false;
+                }
+            }
+        }
+        
+    } else {
+        if (Array.isArray(collection)){
+            for (let i = 0; i < collection.length; i++){
+                if (!action(collection[i], i, collection)){
+                    return false;
+                }
+            }
+        } else {
+            for (let key in collection){
+                if (!action(collection[key], key, collection)){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+ }
+ 
+ module.exports.every = every;
+ 
+/**
+ * some: Designed to take in a collection and a function and call the function for every element of the collection. 
+ * If the function call returns true for at least one element, return true, return false otherwise.
+ * If no function is provided, return true if at least one element is truthy, return false otherwise.
+ * 
+ * @param {Array of Object} collection: The input collection.
+ * @param {Function} action: The function to call on every element of the input collection.
+ * @return {Boolean}: True if the function call returns true for at least one element (or if an element is truthy when no function is provided), false otherwise. 
+ */
+ 
+ function some(collection, action){
+    if (action === undefined){
+        if (Array.isArray(collection)){
+            for (let i = 0; i < collection.length; i++){
+                if (collection[i]){
+                    return true;
+                }
+            }
+        } else {
+            for (let key in collection){
+                if (collection[key]){
+                    return true;
+                }
+            }
+        }
+        
+    } else {
+        if (Array.isArray(collection)){
+            for (let i = 0; i < collection.length; i++){
+                if (action(collection[i], i, collection)){
+                    return true;
+                }
+            }
+        } else {
+            for (let key in collection){
+                if (action(collection[key], key, collection)){
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+ }
+ 
+ module.exports.some = some;
+ 
+/**
+ * reduce: Designed to take in an array, a function, and a seed value. Loop over the array and call the function for every element, provididng the 'previous result' as a parameter. 
+ * For the first interation, the input seed value is to be used as the previous result. If no seed value was given, use the first element of the array as the seed value. After the last iteration, return the return value of the final function call. 
+ * 
+ * @param {Array} array: The input collection.
+ * @param {Function} action: The function to call on every element of the input array.
+ * @param {Number} seed: The seed value to use in the first iteration of the loop. If not given, use array[0] as the seed value.
+ * @return {Number}: The return value of the final function call after the last iteration.
+ */
+ 
+ function reduce(array, action, seed = array[0]){
+    let result;
+    let start;
+    if (arguments.length === 3){
+        result = seed;
+        start = 0;
+    } else {
+        result = array[0];
+        start = 1;
+    }
+    
+    for (let i = start; i < array.length; i++){
+        result = action(result, array[i], i);
+    }
+    
+    return result;
+ }
+ 
+ module.exports.reduce = reduce;
+ 
+/**
+ * extend: Designed to take in any number of objects and copy all properties from all input objects into the first input object.
+ * 
+ * @param {Object} object1: The first input object into which all properties will be copied in to.
+ * @param {Object} object2, object3, etc.: Any number of other input objects.
+ * @return {Object} object1: The first input object with all properties from every other input object copied into it. 
+ */
+ 
+ function extend(object1, object2){
+    for (let i = 0; i < arguments.length; i++){
+        for (let key in arguments[i]){
+            object1[key] = arguments[i][key];
+        }
+    }
+    return object1;
+ }
+ 
+ module.exports.extend = extend;
